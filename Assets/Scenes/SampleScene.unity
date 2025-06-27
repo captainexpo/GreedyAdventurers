@@ -157,6 +157,7 @@ MonoBehaviour:
   gridManager: {fileID: 1975244754}
   gameManager: {fileID: 1610525595}
   heroManager: {fileID: 1093313954}
+  pathfinder: {fileID: 1454345721}
   uiManager: {fileID: 1217492008}
 --- !u!4 &296305562
 Transform:
@@ -920,6 +921,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   gridManager: {fileID: 1975244754}
   blockingTypes: 00000000
+  debugDrawTime: 5
+  debugDrawYOffset: 2
 --- !u!1 &1610525594
 GameObject:
   m_ObjectHideFlags: 0
@@ -952,6 +955,7 @@ MonoBehaviour:
   heroManager: {fileID: 1093313954}
   gridManager: {fileID: 1975244754}
   UIManager: {fileID: 1217492008}
+  phase: 0
 --- !u!4 &1610525596
 Transform:
   m_ObjectHideFlags: 0
@@ -1012,7 +1016,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   reservedPositions: []
-  treasurePosition: {x: 0, y: 0}
   gridSize: {x: 10, y: 10}
   tileWidth: 1
   tileHeight: 1

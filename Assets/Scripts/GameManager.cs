@@ -14,7 +14,7 @@ public class GameManager : MonoBehaviour
     [SerializeField] private GridManager gridManager;
     [SerializeField] private UIManager UIManager;
 
-    public RoundPhase phase { get; private set; } = RoundPhase.Building; 
+    public RoundPhase phase = RoundPhase.Building; 
 
     void Start()
     {
