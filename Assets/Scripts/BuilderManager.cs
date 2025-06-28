@@ -1,5 +1,4 @@
 using Grid;
-using Unity.VisualScripting;
 using UnityEngine;
 
 public class BuilderManager : MonoBehaviour
@@ -10,7 +9,9 @@ public class BuilderManager : MonoBehaviour
     public LayerMask mouseInteractionMask;
 
     public GridNodeType selectedType;
-    
+
+    public bool isEnabled = false;
+
     [SerializeField] private GridManager gridManager;
     [SerializeField] private GameManager gameManager;
     [SerializeField] private HeroManager heroManager;
@@ -37,6 +38,7 @@ public class BuilderManager : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        if (!isEnabled) return; // TODO: Something else
         if (Input.GetKeyDown(placeKey))
         {
             var node = GetClickedGridNode(Input.mousePosition);
@@ -51,7 +53,7 @@ public class BuilderManager : MonoBehaviour
     public bool CheckValidity()
     {
         var allTreasures = gridManager.FindAll(GridNodeType.Treasure);
-        
+
         if (allTreasures.Count == 0) return false; // No treasure placed
 
         foreach (var treasure in allTreasures)
@@ -62,15 +64,15 @@ public class BuilderManager : MonoBehaviour
             pathfinder.DebugDrawPath(path);
 #endif
         }
-        
+
         return true;
     }
     public void OnPlace(GridNode clicked)
     {
         gridManager.TryReplaceAtPosition(
-            clicked.pos, 
+            clicked.pos,
             gridManager.CreateGridNodeAtPos(
-                gridManager.typeToPrefab[selectedType], 
+                gridManager.typeToPrefab[selectedType],
                 clicked.pos,
                 selectedType
             )
@@ -89,8 +91,16 @@ public class BuilderManager : MonoBehaviour
         );
         uiManager.UpdateValidityText(CheckValidity());
     }
-    private void OnDrawGizmos()
+    public void Enable()
     {
-        //Gizmos.DrawLine()
+        if (isEnabled) return; // Already enabled
+        isEnabled = true;
+        uiManager.SetBuilderUI(true);
+    }
+
+    public void Disable()
+    {
+        isEnabled = false;
+        uiManager.SetBuilderUI(false);
     }
 }

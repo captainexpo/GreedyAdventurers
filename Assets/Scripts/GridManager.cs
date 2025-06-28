@@ -51,7 +51,23 @@ namespace Grid
             }
             maxPos = TileToWorldRaw(gridSize.x, gridSize.y);
         }
-
+        public List<GridNode> getNeighbors(Vector2Int center)
+        {
+            List<GridNode> n = new();
+            for (int y = -1; y < 2; y++)
+            {
+                for (int x = -1; x < 2; x++)
+                {
+                    if (x == 0 && y == 0) continue;
+                    if (x != 0 && y != 0) continue; // Skip diagonals
+                    var cx = center.x + x;
+                    var cy = center.y + y;
+                    if (gridSize.x <= cx || cx < 0 || cy < 0 || gridSize.y <= cy) continue;
+                    n.Add(GridGetAtPosition(new(cx, cy)));
+                }
+            }
+            return n;
+        }
         public Vector3 TileToWorld(int x, int y)
         {
             Vector3 gridOffset = new(

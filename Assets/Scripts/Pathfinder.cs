@@ -17,23 +17,7 @@ public class Pathfinder : MonoBehaviour
     public float debugDrawYOffset = 2f;
 #endif
 
-    List<Vector2Int> getNeighbors(Vector2Int center)
-    {
-        List<Vector2Int> n = new();
-        for (int y = -1; y < 2; y++)
-        {
-            for (int x = -1; x < 2; x++)
-            {
-                if (x == 0 && y == 0) continue;
-                if (x != 0 && y != 0) continue; // Skip diagonals
-                var cx = center.x + x;
-                var cy = center.y + y;
-                if (gridManager.gridSize.x <= cx || cx < 0 || cy < 0 || gridManager.gridSize.y <= cy) continue;
-                n.Add(new Vector2Int(cx, cy));
-            }
-        }
-        return n;
-    }
+
     bool DoesBlock(GridNodeType type) => blockingTypes.Contains(type);
     List<Vector2Int> Dijkstras(Vector2Int start, Vector2Int end)
     {
@@ -55,19 +39,19 @@ public class Pathfinder : MonoBehaviour
 
             visited.Add(current);
 
-            foreach (var neighbor in getNeighbors(current))
+            foreach (var neighbor in gridManager.getNeighbors(current))
             {
-                if (visited.Contains(neighbor)) continue;
-                var node = gridManager.grid[neighbor.y][neighbor.x];
+                if (visited.Contains(neighbor.pos)) continue;
+                var node = gridManager.grid[neighbor.pos.y][neighbor.pos.x];
                 if (DoesBlock(node.nodeType)) continue;
 
                 float tentative = distances[current.y][current.x] + 1f;
 
-                if (tentative < distances[neighbor.y][neighbor.x])
+                if (tentative < distances[neighbor.pos.y][neighbor.pos.x])
                 {
-                    distances[neighbor.y][neighbor.x] = tentative;
-                    previous[neighbor] = current;
-                    frontier.Add(neighbor);
+                    distances[neighbor.pos.y][neighbor.pos.x] = tentative;
+                    previous[neighbor.pos] = current;
+                    frontier.Add(neighbor.pos);
                 }
             }
         }

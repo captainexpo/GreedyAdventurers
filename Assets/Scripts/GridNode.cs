@@ -5,10 +5,10 @@ using System.Collections.Generic;
 
 public class GridNode : MonoBehaviour
 {
-    public GridNodeType nodeType { get; private set; }
-    public Vector2Int pos { get; private set; }
+    public GridNodeType nodeType;
+    public Vector2Int pos;
 
-    private Color highlightColor = Color.white;
+    private Color highlightColor = new Color(0.7f, 0.7f, 0.7f);
     public List<GameObject> gfx;
     public void InitGridNode(GridNodeType nodeType, GameObject gameObject, Vector2Int pos)
     {
@@ -24,6 +24,7 @@ public class GridNode : MonoBehaviour
             mat.EnableKeyword("_EMISSION");
             mat.SetColor("_EmissionColor", x ? highlightColor : Color.black);
         });
+        this.transform.position += new Vector3(0f, x ? 0.05f : -0.05f, 0f);
     }
 
     private void OnMouseEnter()

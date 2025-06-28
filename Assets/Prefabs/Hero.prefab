@@ -26,7 +26,7 @@ Transform:
   m_GameObject: {fileID: 824187788979254750}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -0.19867642, y: -0.056373674, z: 0.23813783}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -49,7 +49,9 @@ MonoBehaviour:
   gridPos: {x: 0, y: 0}
   type: 0
   heroManager: {fileID: 0}
-  health: 0
+  health: 3
+  speed: 1
+  moving: 0
 --- !u!1001 &5924532314934708213
 PrefabInstance:
   m_ObjectHideFlags: 0
