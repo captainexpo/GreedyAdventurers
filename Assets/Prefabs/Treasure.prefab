@@ -99,8 +99,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   nodeType: 0
   pos: {x: 0, y: 0}
+  orientation: 0
   gfx:
   - {fileID: 6220948756123439857}
+  - {fileID: 5145892262694488055}
 --- !u!114 &4183256752373436343
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -113,7 +115,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a4217e3f033ceec4d81a62e6d260b5d1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  nodeType: 5
 --- !u!1001 &2817456621579081593
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -273,5 +274,10 @@ PrefabInstance:
 --- !u!4 &3580356151994557844 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: 666254d0c1872bc4988bd1f5ae8613f9, type: 3}
+  m_PrefabInstance: {fileID: 3901598929882989183}
+  m_PrefabAsset: {fileID: 0}
+--- !u!1 &5145892262694488055 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 8164078558771037576, guid: 666254d0c1872bc4988bd1f5ae8613f9, type: 3}
   m_PrefabInstance: {fileID: 3901598929882989183}
   m_PrefabAsset: {fileID: 0}

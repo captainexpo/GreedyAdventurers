@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Unity.VisualScripting;
 using UnityEngine;
+using static UnityEditor.Progress;
 
 public enum DecisionResult
 {
@@ -56,6 +57,12 @@ public class Hero : MonoBehaviour
     {
         return node.nodeType != GridNodeType.Wall;
     }
+    IEnumerator StopGotTreasureColor(GridNode node) 
+    {
+        print("Stopping highlight for treasure node: " + node.pos);
+        yield return new WaitForSeconds(1.0f); 
+        node.GetComponent<GridNode>().SetHighlight(false); 
+    }
     public DecisionResult MakeDecision(List<GridNode> neighbors)
     {
         // Check if neighbor is a treasure
@@ -64,6 +71,9 @@ public class Hero : MonoBehaviour
             if(item.nodeType == GridNodeType.Treasure)
             {
                 visitedPositions.Add(item.pos);
+                var n = item.GetComponent<GridNode>();
+                n.SetHighlight(true, Color.yellow);
+                StartCoroutine(StopGotTreasureColor(item)); // Stop highlight after 0.5 seconds
                 return DecisionResult.TreasureFound; 
             }
         }

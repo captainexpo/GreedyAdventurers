@@ -34,6 +34,7 @@ public class BuilderManager : MonoBehaviour
         uiManager.SetBuildOptionDropdownSelectionCallback(SelectionCallback);
         foreach (KeyValuePair<GridNodeType, int> item in costs)
         {
+            if(item.Key == GridNodeType.Empty) continue; // Skip empty nodes
             uiManager.AddBuildOptionDropdown(
                 title: item.Key.ToString(), 
                 text: (item.Value >= 0 ? "-" : "+") + Mathf.Abs(item.Value).ToString() + "$ " + item.Key.ToString()

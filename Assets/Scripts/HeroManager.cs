@@ -1,8 +1,5 @@
-using DG.Tweening;
-using EasyButtons;
 using Grid;
-using System.Collections.Generic;
-using System.Linq;
+using System.Collections;
 using UnityEngine;
 
 public enum HeroType
@@ -42,6 +39,11 @@ public class HeroManager : MonoBehaviour
     // Update is called once per frame
     public void HeroKilled(Hero hero)
     {
+        StartCoroutine(_HeroKilled(hero));
+    }
+    IEnumerator _HeroKilled(Hero hero)
+    {
+        yield return new WaitForSeconds(0.25f);
         if (activeHero == hero)
         {
             activeHero.StopMoving();
@@ -74,7 +76,7 @@ public class HeroManager : MonoBehaviour
     public void HeroDoneMoving(Hero hero)
     {
         activeHero.StopMoving();
-        if(gameManager.phase == RoundPhase.Building) gameManager.TryAdvancePhase(out var newPhase);
+        if(gameManager.phase == RoundPhase.HeroMoving) gameManager.TryAdvancePhase(out var newPhase);
 
     }
 

@@ -62,15 +62,16 @@ public class GridNode : MonoBehaviour
         return this;
     }
 
-    public void SetHighlight(bool x)
+
+    public void SetHighlight(bool x, Color? overrideColor = null)
     {
         gfx.ForEach((e)=>
         {
             var mat = e.GetComponent<Renderer>().material;
             mat.EnableKeyword("_EMISSION");
-            mat.SetColor("_EmissionColor", x ? highlightColor : Color.black);
+            mat.SetColor("_EmissionColor", x ? overrideColor ?? highlightColor : Color.black);
         });
-        this.transform.position += new Vector3(0f, x ? 0.05f : -0.05f, 0f);
+        transform.position += new Vector3(0f, x ? 0.05f : -0.05f, 0f);
     }
     private void OnMouseEnter()
     {

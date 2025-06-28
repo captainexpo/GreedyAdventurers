@@ -12,6 +12,8 @@ public class UIManager : MonoBehaviour
     public TMP_Dropdown buildOptionDropdown;
     private Action<string> builderSelectionCallback;
 
+    public List<GameObject> builderExclusiveUI = new();
+
     readonly Dictionary<int, string> buildOptions = new();
     private void Start()
     {
@@ -29,7 +31,10 @@ public class UIManager : MonoBehaviour
     }
     public void SetBuilderUI(bool enabled)
     {
-        return; // TODO: Implement this
+        foreach (var ui in builderExclusiveUI)
+        {
+            ui.SetActive(enabled);
+        }
     }
 
     public void SetBuildOptionDropdownSelectionCallback(Action<string> callback)
