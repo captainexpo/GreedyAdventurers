@@ -813,9 +813,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 439a7310cb7c94244ad1a0ca8a6a7b32, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  pathfinder: {fileID: 1454345721}
   activeHero: {fileID: 0}
-  gm: {fileID: 1975244754}
+  pathfinder: {fileID: 1454345721}
+  gridManager: {fileID: 1975244754}
+  gameManager: {fileID: 1610525595}
   isEnabled: 0
   heroPrefab: {fileID: 824187788979254750, guid: e1da8894b0b2a594daa4c81678d8003c, type: 3}
 --- !u!1 &1143025156
