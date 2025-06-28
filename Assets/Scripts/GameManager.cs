@@ -98,4 +98,11 @@ public class GameManager : MonoBehaviour
         if(phase == RoundPhase.HeroMoving) 
             TryAdvancePhase(out var newPhase);
     }
+
+    public void HeroDied(Hero hero)
+    {
+        // Optionally handle UI, stats, etc.
+        if (phase == RoundPhase.HeroMoving)
+            TryAdvancePhase(out var newPhase);
+    }
 }

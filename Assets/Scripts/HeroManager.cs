@@ -51,6 +51,7 @@ public class HeroManager : MonoBehaviour
             Debug.Log("Hero has been killed.");
             gameManager.TryAdvancePhase(out var _);
         }
+        gameManager.HeroDied(hero);
     }
     public void Enable()
     {
@@ -73,7 +74,7 @@ public class HeroManager : MonoBehaviour
     public void HeroDoneMoving(Hero hero)
     {
         activeHero.StopMoving();
-        gameManager.TryAdvancePhase(out var newPhase);
+        if(gameManager.phase == RoundPhase.Building) gameManager.TryAdvancePhase(out var newPhase);
 
     }
 
