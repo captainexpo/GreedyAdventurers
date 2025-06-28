@@ -1,16 +1,18 @@
 using System;
 using System.Collections.Generic;
 using TMPro;
+using Unity.VisualScripting;
 using UnityEngine;
 
 public class UIManager : MonoBehaviour
 {
     public TextMeshProUGUI validityText;
+    public TextMeshProUGUI moneyText;
 
     public TMP_Dropdown buildOptionDropdown;
     private Action<string> builderSelectionCallback;
 
-    readonly Dictionary<int, string> buildOptions = new Dictionary<int, string>();
+    readonly Dictionary<int, string> buildOptions = new();
     private void Start()
     {
         buildOptionDropdown.onValueChanged.AddListener(BuildOptionSelected);
@@ -20,7 +22,11 @@ public class UIManager : MonoBehaviour
     {
         validityText.gameObject.SetActive(!isValid);
     }
-
+    public void UpdateMoneyText(int money)
+    {
+        if (moneyText == null) Debug.LogWarning("What the fuck");
+        moneyText.text = $"{money}$";
+    }
     public void SetBuilderUI(bool enabled)
     {
         return; // TODO: Implement this

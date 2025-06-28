@@ -131,7 +131,7 @@ public class Hero : MonoBehaviour
     {
         while (moving)
         {
-            var neighbors = gridManager.getNeighbors(gridPos);
+            var neighbors = gridManager.GetNeighbors(gridPos);
             var result = MakeDecision(neighbors);
             
             if (result == DecisionResult.Finished) 

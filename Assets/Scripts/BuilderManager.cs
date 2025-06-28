@@ -11,6 +11,9 @@ public class BuilderManager : MonoBehaviour
     public LayerMask mouseInteractionMask;
 
     public GridNodeType selectedType;
+    public Orientation selectedOrientation;
+
+    public float treasureSeparation = 4f;
 
     public bool isEnabled = false;
 
@@ -37,7 +40,6 @@ public class BuilderManager : MonoBehaviour
             );
         }
     }
-
     GridNode GetClickedGridNode(Vector3 mousePos)
     {
         Ray ray = Camera.main.ScreenPointToRay(mousePos);
@@ -64,6 +66,42 @@ public class BuilderManager : MonoBehaviour
             var node = GetClickedGridNode(Input.mousePosition);
             if (node != null) OnDelete(node);
         }
+        // Scroll through the orientations
+        var scroll = Input.mouseScrollDelta.normalized; // Normalize scroll delta
+        if(scroll.y != 0f)
+        {
+            int count = 4;
+            if (scroll.y < 0f)
+            {
+                selectedOrientation = (Orientation)(((int)selectedOrientation - 1 + count) % count);
+            }
+            else if (scroll.y > 0f)
+            {
+                selectedOrientation = (Orientation)(((int)selectedOrientation + 1) % count);
+            }
+            gridManager.selectedOrientation = selectedOrientation; // TODO: Should remove gridManager.selectedOrientation
+        }
+    }
+    public bool ValidateTreasurePositions()
+    {
+        var treasures = gridManager.FindAll(GridNodeType.Treasure);
+        int numTreasure = treasures.Count;
+        for (int i = 0; i < numTreasure; i++)
+        {
+            for (int j = 0; j < numTreasure; j++)
+            {
+                // Distance check
+                if (i == j) continue; 
+                var p1 = treasures[i].pos;
+                var p2 = treasures[j].pos;
+                if (Vector2Int.Distance(p1, p2) < treasureSeparation)
+                {
+                    Debug.LogWarning($"Treasure {i} at {p1} is too close to treasure {j} at {p2}");
+                    return false; // Treasures are too close
+                }
+            }
+        }
+        return true;
     }
     public bool CheckValidity()
     {
@@ -71,22 +109,25 @@ public class BuilderManager : MonoBehaviour
 
         if (funds < 0) return false;
         if (allTreasures.Count == 0) return false; // No treasure placed
+        if (!ValidateTreasurePositions()) return false; // Treasures are too close
 
-        foreach (var treasure in allTreasures)
+        foreach (var startPos in gridManager.startPositions)
         {
-            var path = pathfinder.FindPath(heroManager.activeHero.gridPos, treasure.pos);
-            if (path == null) return false; // No path to treasure found
-#if UNITY_EDITOR
-            pathfinder.DebugDrawPath(path);
-#endif
+            foreach (var treasure in allTreasures)
+            {
+                var path = pathfinder.FindPath(startPos, treasure.pos);
+                if (path == null) return false; // No path to treasure found
+                pathfinder.DebugDrawPath(path);
+            }
         }
+
 
         return true;
     }
     public void OnPlace(GridNode clicked)
     {
-        var old = gridManager.GridGetAtPosition(clicked.pos).nodeType;
-        var succeded = gridManager.TryReplaceAtPosition(
+        GridNodeType old = gridManager.GridGetAtPosition(clicked.pos).nodeType;
+        bool succeded = gridManager.TryReplaceAtPosition(
             clicked.pos,
             gridManager.CreateGridNodeAtPos(
                 gridManager.typeToPrefab[selectedType],
@@ -106,6 +147,7 @@ public class BuilderManager : MonoBehaviour
         print("Updating funds: " + difference);
         funds -= difference;
         uiManager.UpdateValidityText(CheckValidity());
+        uiManager.UpdateMoneyText(funds);
     }
     public void OnDelete(GridNode clicked)
     {

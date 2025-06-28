@@ -4,9 +4,10 @@ using System.Collections.Generic;
 
 public enum Orientation 
 {
+    Unspecified = -1,
     North,
-    South,
     East,
+    South,
     West,
 }
 
@@ -40,7 +41,7 @@ public class GridNode : MonoBehaviour
 {
     public GridNodeType nodeType;
     public Vector2Int pos;
-    public Vector2Int orientation = new(1, 0); // (1, 0) for right, (0, 1) for up, (-1, 0) for left, (0, -1) for down
+    public Orientation orientation = Orientation.North;
 
     private Color highlightColor = new(0.7f, 0.7f, 0.7f);
     public List<GameObject> gfx;
@@ -53,10 +54,12 @@ public class GridNode : MonoBehaviour
         nodeType = nodeBehavior.nodeType;
     }
 
-    public void InitGridNode(GridNodeType nodeType, GameObject gameObject, Vector2Int pos)
+    public GridNode InitGridNode(GridNodeType nodeType, Orientation orientation, GameObject gameObject, Vector2Int pos)
     {
         this.nodeType = nodeType;
         this.pos = pos;
+        transform.rotation = Utils.OrientationToQuaternion(orientation);
+        return this;
     }
 
     public void SetHighlight(bool x)
@@ -69,7 +72,6 @@ public class GridNode : MonoBehaviour
         });
         this.transform.position += new Vector3(0f, x ? 0.05f : -0.05f, 0f);
     }
-
     private void OnMouseEnter()
     {
         SetHighlight(true);

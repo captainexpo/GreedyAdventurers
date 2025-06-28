@@ -40,10 +40,16 @@ public class GameManager : MonoBehaviour
             case RoundPhase.Building:
                 builderManager.Enable();
                 heroManager.Disable();
+                foreach (var row in gridManager.grid)
+                    foreach (var node in row)
+                        node.nodeBehavior.OnStartBuild();
                 break;
             case RoundPhase.HeroMoving:
                 builderManager.Disable();
                 heroManager.Enable();
+                foreach (var row in gridManager.grid)
+                    foreach (var node in row)
+                        node.nodeBehavior.OnStartHeroMove(heroManager.activeHero);
                 break;
             default:
                 throw new System.ArgumentOutOfRangeException(nameof(phase), phase, null);

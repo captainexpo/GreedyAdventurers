@@ -49,7 +49,7 @@ MonoBehaviour:
   gridPos: {x: 0, y: 0}
   type: 0
   heroManager: {fileID: 0}
-  health: 3
+  health: 5
   speed: 0.1
   moving: 0
 --- !u!1001 &5924532314934708213

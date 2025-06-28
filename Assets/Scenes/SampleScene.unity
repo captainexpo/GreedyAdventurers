@@ -316,12 +316,29 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 4294967295
   selectedType: 0
+  selectedOrientation: 0
+  treasureSeparation: 4
   isEnabled: 0
+  funds: 0
   gridManager: {fileID: 1975244754}
   gameManager: {fileID: 1610525595}
   heroManager: {fileID: 1093313954}
   pathfinder: {fileID: 1454345721}
   uiManager: {fileID: 1217492008}
+  costs:
+    _serializedList:
+    - Key: 0
+      Value: 25
+    - Key: 1
+      Value: 0
+    - Key: 2
+      Value: 100
+    - Key: 3
+      Value: 100
+    - Key: 4
+      Value: 100
+    - Key: 6
+      Value: -300
 --- !u!4 &296305562
 Transform:
   m_ObjectHideFlags: 0
@@ -1164,7 +1181,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: TEST TEST TEST
+  m_text: 
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
@@ -1410,6 +1427,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   validityText: {fileID: 318538300}
+  buildOptionDropdown: {fileID: 2026712342}
 --- !u!1 &1227625474
 GameObject:
   m_ObjectHideFlags: 0
@@ -2001,6 +2019,12 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   reservedPositions: []
+  startPositions:
+  - {x: 0, y: 0}
+  - {x: 9, y: 9}
+  - {x: 9, y: 0}
+  - {x: 0, y: 9}
+  selectedOrientation: 0
   gridSize: {x: 10, y: 10}
   tileWidth: 1
   tileHeight: 1
@@ -2009,9 +2033,15 @@ MonoBehaviour:
     _serializedList:
     - Key: 2
       Value: {fileID: 6802614359717743138, guid: c1f2e006c74b7864888710a4661f21ba, type: 3}
+    - Key: 3
+      Value: {fileID: 3801597386002628128, guid: d1c5f40706d5e0e47bc2e2549d2878c1, type: 3}
+    - Key: 4
+      Value: {fileID: 0}
+    - Key: 5
+      Value: {fileID: 9089498361012016955, guid: 695ba604d75693e47b930f363a24d30d, type: 3}
     - Key: 0
       Value: {fileID: 9089498361012016955, guid: 73e680c953f9a4247922a3b9a6f9c22a, type: 3}
-    - Key: 5
+    - Key: 6
       Value: {fileID: 9089498361012016955, guid: 92f333bb7661fe44aba437e02890ee18, type: 3}
     - Key: 1
       Value: {fileID: 9089498361012016955, guid: 50a6a965065aa344e86d63ce6603a465, type: 3}
@@ -2106,10 +2136,7 @@ MonoBehaviour:
   m_Value: 0
   m_MultiSelect: 0
   m_Options:
-    m_Options:
-    - m_Text: TEST TEST TEST
-      m_Image: {fileID: 0}
-      m_Color: {r: 1, g: 1, b: 1, a: 1}
+    m_Options: []
   m_OnValueChanged:
     m_PersistentCalls:
       m_Calls: []

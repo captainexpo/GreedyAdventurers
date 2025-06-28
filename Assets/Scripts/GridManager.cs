@@ -21,6 +21,9 @@ namespace Grid
 
         public List<List<GridNode>> grid;
         public List<Vector2Int> reservedPositions;
+        public List<Vector2Int> startPositions;
+
+        public Orientation selectedOrientation = Orientation.North;
 
         public Vector2Int gridSize;
 
@@ -53,7 +56,7 @@ namespace Grid
             }
             maxPos = TileToWorldRaw(gridSize.x, gridSize.y);
         }
-        public List<GridNode> getNeighbors(Vector2Int center)
+        public List<GridNode> GetNeighbors(Vector2Int center)
         {
             List<GridNode> n = new();
             for (int y = -1; y < 2; y++)
@@ -82,15 +85,15 @@ namespace Grid
         }
         public Vector3 TileToWorldRaw(int x, int y)
         {
-
             return new Vector3(x, 0 , y);
         }
         public bool IsAvailable(Vector2Int position)
         {
             return IsInBounds(position) && !reservedPositions.Contains(position);
         }
-        public GridNode CreateGridNodeAtPos(GameObject prefab, Vector2Int gpos, GridNodeType type)
+        public GridNode CreateGridNodeAtPos(GameObject prefab, Vector2Int gpos, GridNodeType type, Orientation orientation = Orientation.Unspecified)
         {
+            if(orientation == Orientation.Unspecified) orientation = selectedOrientation;
             if (!IsAvailable(gpos)) return null;
             
             int x = gpos.x;
@@ -105,7 +108,7 @@ namespace Grid
 
             var gn = tile.GetComponent<GridNode>();
 
-            gn.InitGridNode(type, tile, new Vector2Int(x, y));
+            gn.InitGridNode(type, orientation, tile, new Vector2Int(x, y));
 
             return gn;
         }
@@ -117,6 +120,18 @@ namespace Grid
                 {
                     grid[y][x] = CreateGridNodeAtPos(typeToPrefab[GridNodeType.Empty], new Vector2Int(x, y), GridNodeType.Empty);
                 }
+            }
+
+            reservedPositions = new();
+            foreach (var position in startPositions)
+            {
+                TryReplaceAtPosition(position, CreateGridNodeAtPos(
+                    typeToPrefab[GridNodeType.PlayerEntrance],
+                    position,
+                    GridNodeType.PlayerEntrance,
+                    orientation: Orientation.North
+                ));
+                reservedPositions.Add(position);
             }
         }
         [Button]

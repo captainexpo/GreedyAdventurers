@@ -26,7 +26,17 @@ public class HeroManager : MonoBehaviour
     void Start()
     {
         print("Started Hero Manager");
-        activeHero = Hero.New(new Vector2Int(0, 0), heroPrefab, gridManager, this);
+    }
+
+    public void SpawnNewHero()
+    {
+        var position = gridManager.startPositions[Random.Range(0, gridManager.startPositions.Count)];
+        if (activeHero != null)
+        {
+            Debug.LogWarning("A hero is already active. Cannot spawn a new one.");
+            return;
+        }
+        activeHero = Hero.New(position, heroPrefab, gridManager, this);
     }
 
     // Update is called once per frame
@@ -39,11 +49,13 @@ public class HeroManager : MonoBehaviour
             isEnabled = false;
 
             Debug.Log("Hero has been killed.");
+            gameManager.TryAdvancePhase(out var _);
         }
     }
     public void Enable()
     {
         if (isEnabled) return; // Already enabled
+        SpawnNewHero();
         isEnabled = true;
         activeHero.StartMoving();
     }
@@ -51,7 +63,11 @@ public class HeroManager : MonoBehaviour
     public void Disable()
     {
         isEnabled = false;
-        activeHero.StopMoving();
+        if (activeHero != null)
+        {
+            activeHero.KillSelf(true); // Force kill the hero to stop any ongoing movement
+            activeHero.StopMoving();
+        }
     }
 
     public void HeroDoneMoving(Hero hero)

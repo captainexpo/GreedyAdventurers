@@ -11,14 +11,13 @@ public class Pathfinder : MonoBehaviour
 
     public List<List<float>> distances;
 
-#if UNITY_EDITOR
     [Header("Debug Settings")]
     public float debugDrawTime = 5f;
     public float debugDrawYOffset = 2f;
-#endif
 
 
     bool DoesBlock(GridNodeType type) => blockingTypes.Contains(type);
+
     List<Vector2Int> Dijkstras(Vector2Int start, Vector2Int end)
     {
         var previous = new Dictionary<Vector2Int, Vector2Int>();
@@ -39,7 +38,7 @@ public class Pathfinder : MonoBehaviour
 
             visited.Add(current);
 
-            foreach (var neighbor in gridManager.getNeighbors(current))
+            foreach (var neighbor in gridManager.GetNeighbors(current))
             {
                 if (visited.Contains(neighbor.pos)) continue;
                 var node = gridManager.grid[neighbor.pos.y][neighbor.pos.x];
@@ -91,10 +90,10 @@ public class Pathfinder : MonoBehaviour
             new Vector2Int((int)end.x, (int)end.y)
         );
         if (p == null) return null;
+        DebugDrawPath(p);
         return p;
     }
 
-#if UNITY_EDITOR
     public void DebugDrawPath(List<Vector2Int> path)
     {
         for(int i = 0; i < path.Count - 1; i++)
@@ -104,5 +103,5 @@ public class Pathfinder : MonoBehaviour
             Debug.DrawLine(start + Vector3.up * debugDrawYOffset, end + Vector3.up * debugDrawYOffset, Color.red, debugDrawTime);
         }
     }
-#endif
+
 }
