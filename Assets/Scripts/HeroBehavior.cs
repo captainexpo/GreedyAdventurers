@@ -4,6 +4,7 @@ using Grid;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using Unity.VisualScripting;
 using UnityEngine;
 
 public enum DecisionResult
@@ -42,8 +43,13 @@ public class Hero : MonoBehaviour
         return heroScript;
     }
 
-    public void KillSelf()
+    public void KillSelf(bool force = true)
     {
+        if (!force)
+        {
+            StopMoving();
+            heroManager.HeroKilled(this);
+        }
         Destroy(gameObject);
     }
     public bool WillMove(GridNode node)
@@ -102,12 +108,16 @@ public class Hero : MonoBehaviour
             return DecisionResult.Move;
         }
     }
-    public bool TryMoveTo(Vector2Int gpos)
+    public bool TryMoveTo(Vector2Int gpos, out Tween tween)
     {
+        tween = null;
         if (gridManager.GridGetAtPosition(gpos).nodeType == GridNodeType.Wall) return false;
-        var tween = gameObject.transform.DOMove(gridManager.TileToWorld(gridPos.x, gridPos.y), 1f);
+
         FaceMovingDir(gpos - gridPos);
-        this.gridPos = gpos;
+
+        tween = gameObject.transform.DOMove(gridManager.TileToWorld(gridPos.x, gridPos.y), 1f);
+        gridPos = gpos;
+
         return true;
     }
     public void StartMoving()
@@ -127,16 +137,25 @@ public class Hero : MonoBehaviour
             if (result == DecisionResult.Finished) 
                 break;
             
-            if(result == DecisionResult.Move || result == DecisionResult.TreasureFound) 
-                TryMoveTo(visitedPositions.Last());
-            
+            if(result == DecisionResult.Move || result == DecisionResult.TreasureFound)
+            {
+                gridManager.GridGetAtPosition(gridPos).nodeBehavior.OnHeroExit(this);
+                var toMove = visitedPositions.Last();
+                TryMoveTo(toMove, out var tween);
+                if (tween != null)
+                {
+                    yield return tween.WaitForCompletion(); 
+                    gridManager.GridGetAtPosition(toMove).nodeBehavior.OnHeroEnter(this);
+                }
+            }
+
             if (result == DecisionResult.TreasureFound)
             {
                 this.StopMoving();
                 heroManager.HeroGotTreasure(this);
                 break;
             }
-            yield return new WaitForSeconds(speed);
+            yield return new WaitForEndOfFrame();
         }
         heroManager.HeroDoneMoving(this);
     }
@@ -163,6 +182,15 @@ public class Hero : MonoBehaviour
         else if (dir == Vector2Int.left)
         {
             transform.rotation = Quaternion.Euler(0, -90, 0);
+        }
+    }
+
+    public void Damage(int amount)
+    {
+        health -= amount;
+        if (health <= 0)
+        {
+            KillSelf();
         }
     }
 }

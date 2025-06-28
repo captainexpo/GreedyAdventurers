@@ -30,11 +30,17 @@ public class HeroManager : MonoBehaviour
     }
 
     // Update is called once per frame
-    void Update()
+    public void HeroKilled(Hero hero)
     {
+        if (activeHero == hero)
+        {
+            activeHero.StopMoving();
+            activeHero = null;
+            isEnabled = false;
 
+            Debug.Log("Hero has been killed.");
+        }
     }
-
     public void Enable()
     {
         if (isEnabled) return; // Already enabled

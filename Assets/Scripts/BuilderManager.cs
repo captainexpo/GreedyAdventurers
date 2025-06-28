@@ -1,4 +1,6 @@
+using AYellowpaper.SerializedCollections;
 using Grid;
+using System.Collections.Generic;
 using UnityEngine;
 
 public class BuilderManager : MonoBehaviour
@@ -12,16 +14,28 @@ public class BuilderManager : MonoBehaviour
 
     public bool isEnabled = false;
 
+    public int funds = 0;
+
     [SerializeField] private GridManager gridManager;
     [SerializeField] private GameManager gameManager;
     [SerializeField] private HeroManager heroManager;
     [SerializeField] private Pathfinder pathfinder;
     [SerializeField] private UIManager uiManager;
 
+    [SerializedDictionary("NodeType", "Cost")]
+    public SerializedDictionary<GridNodeType, int> costs;
+
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
-
+        uiManager.SetBuildOptionDropdownSelectionCallback(SelectionCallback);
+        foreach (KeyValuePair<GridNodeType, int> item in costs)
+        {
+            uiManager.AddBuildOptionDropdown(
+                title: item.Key.ToString(), 
+                text: (item.Value >= 0 ? "-" : "+") + Mathf.Abs(item.Value).ToString() + "$ " + item.Key.ToString()
+            );
+        }
     }
 
     GridNode GetClickedGridNode(Vector3 mousePos)
@@ -31,6 +45,7 @@ public class BuilderManager : MonoBehaviour
 
         if (Physics.Raycast(ray, out RaycastHit hit, Mathf.Infinity, mouseInteractionMask))
         {
+            if (!hit.rigidbody) return null; 
             if (hit.rigidbody.gameObject.TryGetComponent(out GridNode node)) return node;
         }
         return null;
@@ -54,6 +69,7 @@ public class BuilderManager : MonoBehaviour
     {
         var allTreasures = gridManager.FindAll(GridNodeType.Treasure);
 
+        if (funds < 0) return false;
         if (allTreasures.Count == 0) return false; // No treasure placed
 
         foreach (var treasure in allTreasures)
@@ -69,7 +85,8 @@ public class BuilderManager : MonoBehaviour
     }
     public void OnPlace(GridNode clicked)
     {
-        gridManager.TryReplaceAtPosition(
+        var old = gridManager.GridGetAtPosition(clicked.pos).nodeType;
+        var succeded = gridManager.TryReplaceAtPosition(
             clicked.pos,
             gridManager.CreateGridNodeAtPos(
                 gridManager.typeToPrefab[selectedType],
@@ -77,11 +94,22 @@ public class BuilderManager : MonoBehaviour
                 selectedType
             )
         );
+        if (succeded)
+        {
+            UpdateFunds(-costs[old]); // Delete the node first, if it exists
+            UpdateFunds(costs[selectedType]);
+        }
+        uiManager.UpdateValidityText(CheckValidity());
+    }
+    public void UpdateFunds(int difference)
+    {
+        print("Updating funds: " + difference);
+        funds -= difference;
         uiManager.UpdateValidityText(CheckValidity());
     }
     public void OnDelete(GridNode clicked)
     {
-        gridManager.TryReplaceAtPosition(
+        var succeded = gridManager.TryReplaceAtPosition(
             clicked.pos,
             gridManager.CreateGridNodeAtPos(
                 gridManager.typeToPrefab[GridNodeType.Empty],
@@ -89,6 +117,7 @@ public class BuilderManager : MonoBehaviour
                 GridNodeType.Empty
             )
         );
+        if (succeded) UpdateFunds(-costs[clicked.nodeType]);
         uiManager.UpdateValidityText(CheckValidity());
     }
     public void Enable()
@@ -102,5 +131,33 @@ public class BuilderManager : MonoBehaviour
     {
         isEnabled = false;
         uiManager.SetBuilderUI(false);
+    }
+
+    public void SelectionCallback(string title)
+    {
+        switch(title)
+        {
+            case "Wall":
+                selectedType = GridNodeType.Wall;
+                break;
+            case "Empty":
+                selectedType = GridNodeType.Empty;
+                break;
+            case "SpikeTrap":
+                selectedType = GridNodeType.SpikeTrap;
+                break;
+            case "PitTrap":
+                selectedType = GridNodeType.PitTrap;
+                break;
+            case "PushTrap":
+                selectedType = GridNodeType.PushTrap;
+                break;
+            case "Treasure":
+                selectedType = GridNodeType.Treasure;
+                break;
+            default:
+                Debug.LogWarning($"Unknown build option: {title}");
+                return; // Ignore unknown options
+        }
     }
 }

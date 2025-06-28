@@ -71,7 +71,6 @@ public class GameManager : MonoBehaviour
             case RoundPhase.Building:
                 if (!builderManager.CheckValidity()) // Check if the dungeon is valid before moving to the next phase
                 {
-                    uiManager.UpdateValidityText(false);
                     newPhase = phase;
                     return false;
                 }
@@ -84,7 +83,6 @@ public class GameManager : MonoBehaviour
                 throw new System.ArgumentOutOfRangeException(nameof(phase), phase, null);
         }
         newPhase = phase;
-        uiManager.UpdatePhaseText(phase.ToString());
         NewPhase(phase);
         return true;
     }

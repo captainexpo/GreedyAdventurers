@@ -91,10 +91,6 @@ public class Pathfinder : MonoBehaviour
             new Vector2Int((int)end.x, (int)end.y)
         );
         if (p == null) return null;
-        foreach (var item in p)
-        {
-            print(item);
-        }
         return p;
     }
 

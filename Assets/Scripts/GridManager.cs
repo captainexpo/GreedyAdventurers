@@ -9,8 +9,10 @@ namespace Grid
     {
         Wall,
         Empty,
-        Trap,
-        Enemy,
+        SpikeTrap,
+        PitTrap,
+        PushTrap,
+        PlayerEntrance,
         Treasure,
     }
 
@@ -179,6 +181,28 @@ namespace Grid
         {
             if (!IsInBounds(pos)) return null;
             return grid[pos.y][pos.x];
+        }
+        
+        public Vector2Int GetRandomPosition()
+        {
+            List<Vector2Int> availablePositions = new List<Vector2Int>();
+            for (int y = 0; y < gridSize.y; y++)
+            {
+                for (int x = 0; x < gridSize.x; x++)
+                {
+                    Vector2Int pos = new Vector2Int(x, y);
+                    if (IsAvailable(pos))
+                    {
+                        availablePositions.Add(pos);
+                    }
+                }
+            }
+            if (availablePositions.Count == 0)
+            {
+                Debug.LogWarning("No available positions found in the grid.");
+                return Vector2Int.zero; 
+            }
+            return availablePositions[Random.Range(0, availablePositions.Count)];
         }
     }
 }
