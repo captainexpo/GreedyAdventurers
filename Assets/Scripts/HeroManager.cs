@@ -15,6 +15,11 @@ public class HeroManager : MonoBehaviour
     public GridManager gridManager;
     public GameManager gameManager;
 
+    public bool heroIsDead
+    {
+        get => activeHero == null;
+    }
+
     public bool isEnabled = false;
 
     public GameObject heroPrefab;
@@ -51,7 +56,7 @@ public class HeroManager : MonoBehaviour
             isEnabled = false;
 
             Debug.Log("Hero has been killed.");
-            gameManager.TryAdvancePhase(out var _);
+            gameManager.TryAdvancePhase();
         }
         gameManager.HeroDied(hero);
     }
@@ -76,7 +81,7 @@ public class HeroManager : MonoBehaviour
     public void HeroDoneMoving(Hero hero)
     {
         activeHero.StopMoving();
-        if(gameManager.phase == RoundPhase.HeroMoving) gameManager.TryAdvancePhase(out var newPhase);
+        if(gameManager.phase == RoundPhase.HeroMoving) gameManager.TryAdvancePhase();
 
     }
 
@@ -84,6 +89,5 @@ public class HeroManager : MonoBehaviour
     {
         print("Hero found the treasure!");
         gameManager.HeroGotTreasure(hero);
-        return;
     }
 }

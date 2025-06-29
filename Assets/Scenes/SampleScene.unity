@@ -327,15 +327,17 @@ MonoBehaviour:
   uiManager: {fileID: 1217492008}
   costs:
     _serializedList:
-    - Key: 0
-      Value: 25
     - Key: 1
       Value: 0
+    - Key: 0
+      Value: 25
     - Key: 2
       Value: 100
     - Key: 3
       Value: 100
     - Key: 4
+      Value: 100
+    - Key: 7
       Value: 100
     - Key: 6
       Value: -300
@@ -413,7 +415,7 @@ MonoBehaviour:
       m_Calls: []
   m_text: Invalid Dungeon!
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
+  m_fontAsset: {fileID: 11400000, guid: 4cb398490a905034d80f13ece785aeeb, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
@@ -445,7 +447,7 @@ MonoBehaviour:
   m_fontSizeMin: 18
   m_fontSizeMax: 72
   m_fontStyle: 0
-  m_HorizontalAlignment: 2
+  m_HorizontalAlignment: 1
   m_VerticalAlignment: 512
   m_textAlignment: 65535
   m_characterSpacing: 0
@@ -479,7 +481,7 @@ MonoBehaviour:
   m_margin: {x: 0, y: 0, z: 63.787693, w: 0}
   m_isUsingLegacyAnimationComponent: 0
   m_isVolumetricText: 0
-  m_hasFontAssetChanged: 0
+  m_hasFontAssetChanged: 1
   m_baseMaterial: {fileID: 0}
   m_maskOffset: {x: 0, y: 0, z: 0, w: 0}
 --- !u!222 &318538301
@@ -804,6 +806,142 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls: []
   m_IsOn: 1
+--- !u!1 &399574054
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 399574057}
+  - component: {fileID: 399574056}
+  - component: {fileID: 399574055}
+  m_Layer: 5
+  m_Name: RoundTxt
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &399574055
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 399574054}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f4688fdb7df04437aeb418b961361dc5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Material: {fileID: 0}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_RaycastTarget: 1
+  m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
+  m_Maskable: 1
+  m_OnCullStateChanged:
+    m_PersistentCalls:
+      m_Calls: []
+  m_text: Round 1
+  m_isRightToLeft: 0
+  m_fontAsset: {fileID: 11400000, guid: 4cb398490a905034d80f13ece785aeeb, type: 2}
+  m_sharedMaterial: {fileID: -8809237862590845980, guid: 4cb398490a905034d80f13ece785aeeb, type: 2}
+  m_fontSharedMaterials: []
+  m_fontMaterial: {fileID: 0}
+  m_fontMaterials: []
+  m_fontColor32:
+    serializedVersion: 2
+    rgba: 4294967295
+  m_fontColor: {r: 1, g: 1, b: 1, a: 1}
+  m_enableVertexGradient: 0
+  m_colorMode: 3
+  m_fontColorGradient:
+    topLeft: {r: 1, g: 1, b: 1, a: 1}
+    topRight: {r: 1, g: 1, b: 1, a: 1}
+    bottomLeft: {r: 1, g: 1, b: 1, a: 1}
+    bottomRight: {r: 1, g: 1, b: 1, a: 1}
+  m_fontColorGradientPreset: {fileID: 0}
+  m_spriteAsset: {fileID: 0}
+  m_tintAllSprites: 0
+  m_StyleSheet: {fileID: 0}
+  m_TextStyleHashCode: -1183493901
+  m_overrideHtmlColors: 0
+  m_faceColor:
+    serializedVersion: 2
+    rgba: 4294967295
+  m_fontSize: 25
+  m_fontSizeBase: 25
+  m_fontWeight: 400
+  m_enableAutoSizing: 0
+  m_fontSizeMin: 18
+  m_fontSizeMax: 72
+  m_fontStyle: 0
+  m_HorizontalAlignment: 1
+  m_VerticalAlignment: 256
+  m_textAlignment: 65535
+  m_characterSpacing: 0
+  m_wordSpacing: 0
+  m_lineSpacing: 0
+  m_lineSpacingMax: 0
+  m_paragraphSpacing: 0
+  m_charWidthMaxAdj: 0
+  m_TextWrappingMode: 1
+  m_wordWrappingRatios: 0.4
+  m_overflowMode: 0
+  m_linkedTextComponent: {fileID: 0}
+  parentLinkedComponent: {fileID: 0}
+  m_enableKerning: 0
+  m_ActiveFontFeatures: 6e72656b
+  m_enableExtraPadding: 0
+  checkPaddingRequired: 0
+  m_isRichText: 1
+  m_EmojiFallbackSupport: 1
+  m_parseCtrlCharacters: 1
+  m_isOrthographic: 1
+  m_isCullingEnabled: 0
+  m_horizontalMapping: 0
+  m_verticalMapping: 0
+  m_uvLineOffset: 0
+  m_geometrySortingOrder: 0
+  m_IsTextObjectScaleStatic: 0
+  m_VertexBufferAutoSizeReduction: 0
+  m_useMaxVisibleDescender: 1
+  m_pageToDisplay: 1
+  m_margin: {x: 0, y: 0, z: 0, w: 0}
+  m_isUsingLegacyAnimationComponent: 0
+  m_isVolumetricText: 0
+  m_hasFontAssetChanged: 0
+  m_baseMaterial: {fileID: 0}
+  m_maskOffset: {x: 0, y: 0, z: 0, w: 0}
+--- !u!222 &399574056
+CanvasRenderer:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 399574054}
+  m_CullTransparentMesh: 1
+--- !u!224 &399574057
+RectTransform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 399574054}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 1217492007}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_AnchorMin: {x: 0, y: 0}
+  m_AnchorMax: {x: 0, y: 0}
+  m_AnchoredPosition: {x: 10, y: 30}
+  m_SizeDelta: {x: 200, y: 0}
+  m_Pivot: {x: 0, y: 0}
 --- !u!1 &444714416
 GameObject:
   m_ObjectHideFlags: 0
@@ -1545,6 +1683,7 @@ RectTransform:
   - {fileID: 2026712341}
   - {fileID: 727516114}
   - {fileID: 1234117836}
+  - {fileID: 399574057}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
@@ -1566,6 +1705,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   validityText: {fileID: 318538300}
   moneyText: {fileID: 727516112}
+  roundText: {fileID: 399574055}
   buildOptionDropdown: {fileID: 2026712342}
   builderExclusiveUI:
   - {fileID: 2026712340}
@@ -1865,7 +2005,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   gridManager: {fileID: 1975244754}
-  blockingTypes: 00000000
+  blockingTypes: 0000000009000000
   debugDrawTime: 5
   debugDrawYOffset: 2
 --- !u!1 &1468810819
@@ -1937,6 +2077,7 @@ MonoBehaviour:
   gridManager: {fileID: 1975244754}
   uiManager: {fileID: 1217492008}
   builderManager: {fileID: 296305561}
+  round: 0
   phase: 0
 --- !u!4 &1610525596
 Transform:
@@ -2199,8 +2340,8 @@ MonoBehaviour:
   startPositions:
   - {x: 0, y: 0}
   - {x: 9, y: 9}
-  - {x: 9, y: 0}
   - {x: 0, y: 9}
+  - {x: 9, y: 0}
   selectedOrientation: 0
   gridSize: {x: 10, y: 10}
   tileWidth: 1
@@ -2210,10 +2351,14 @@ MonoBehaviour:
     _serializedList:
     - Key: 2
       Value: {fileID: 6802614359717743138, guid: c1f2e006c74b7864888710a4661f21ba, type: 3}
+    - Key: 9
+      Value: {fileID: 9089498361012016955, guid: 12778afff125b4c388f57c6f63f2a186, type: 3}
+    - Key: 7
+      Value: {fileID: 9089498361012016955, guid: 45ac5d2b37d6f41409dc85d54455a84c, type: 3}
     - Key: 3
       Value: {fileID: 3801597386002628128, guid: d1c5f40706d5e0e47bc2e2549d2878c1, type: 3}
     - Key: 4
-      Value: {fileID: 0}
+      Value: {fileID: 6802614359717743138, guid: 9f69caf30e58d40c79d45265e5218177, type: 3}
     - Key: 5
       Value: {fileID: 9089498361012016955, guid: 695ba604d75693e47b930f363a24d30d, type: 3}
     - Key: 0

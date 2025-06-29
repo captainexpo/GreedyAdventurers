@@ -41,7 +41,7 @@ public class GridNode : MonoBehaviour
 {
     public GridNodeType nodeType;
     public Vector2Int pos;
-    public Orientation orientation = Orientation.North;
+    public Orientation orientation;
 
     private Color highlightColor = new(0.7f, 0.7f, 0.7f);
     public List<GameObject> gfx;
@@ -59,9 +59,9 @@ public class GridNode : MonoBehaviour
         this.nodeType = nodeType;
         this.pos = pos;
         transform.rotation = Utils.OrientationToQuaternion(orientation);
+        this.orientation = orientation;
         return this;
     }
-
 
     public void SetHighlight(bool x, Color? overrideColor = null)
     {
@@ -69,7 +69,7 @@ public class GridNode : MonoBehaviour
         {
             var mat = e.GetComponent<Renderer>().material;
             mat.EnableKeyword("_EMISSION");
-            mat.SetColor("_EmissionColor", x ? overrideColor ?? highlightColor : Color.black);
+            mat.SetColor("_EmissionColor", x ? (overrideColor ?? highlightColor) : Color.black);
         });
         transform.position += new Vector3(0f, x ? 0.05f : -0.05f, 0f);
     }

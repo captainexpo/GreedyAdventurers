@@ -15,8 +15,13 @@ public class CameraManager : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (Input.GetKeyDown(KeyCode.LeftArrow)) RotateAroundWorldPivot(gameObject, rotateAround, Vector3.up, 45f);
-        if (Input.GetKeyDown(KeyCode.RightArrow)) RotateAroundWorldPivot(gameObject, rotateAround, Vector3.up, -45f);
+        if (Input.GetKeyDown(KeyCode.A)) RotateAroundWorldPivot(gameObject, rotateAround, Vector3.up, 45f);
+        if (Input.GetKeyDown(KeyCode.D)) RotateAroundWorldPivot(gameObject, rotateAround, Vector3.up, -45f);
+    }
+
+    public void ResetRotation()
+    {
+        RotateAroundWorldPivot(gameObject, rotateAround, Vector3.up, -0f);
     }
     public void RotateAroundWorldPivot(GameObject obj, Vector3 pivot, Vector3 axis, float degrees, float duration = 0.3f)
     {

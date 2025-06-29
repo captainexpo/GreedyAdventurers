@@ -27,15 +27,18 @@ public class PitTrapNode : MonoBehaviour, GridNodeBase
         if (!trapEnabled) return;
         hero.Damage(2);
 
+        if (heroManager.heroIsDead)
+        {
+            // Do nothing else to hero, because they're dead lmao
+            return;
+        }
+        
         // Move hero to a random position
-        Vector2Int randomPosition = gridManager.GetRandomPosition(); 
-        hero.gridPos = randomPosition; // Update hero's position
-
+        Vector2Int randomPosition = gridManager.GetRandomPosition();
+        hero.TryMoveTo(randomPosition, out _, overrideDefault:true);
         // Make hero fall from the sky
-        hero.transform.position = gridManager.TileToWorld(randomPosition.x, randomPosition.y) + new Vector3(0, 5f, 0);
-        hero.transform.DOMove(gridManager.TileToWorld(randomPosition.x, randomPosition.y), 0.4f);
-
-        Invoke(nameof(Cover), 0.75f);
+        
+        Cover();
     }
 
     public void OnHeroExit(Hero hero)

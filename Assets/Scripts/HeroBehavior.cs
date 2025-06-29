@@ -4,9 +4,7 @@ using Grid;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
-using Unity.VisualScripting;
 using UnityEngine;
-using static UnityEditor.Progress;
 
 public enum DecisionResult
 {
@@ -24,13 +22,17 @@ public class Hero : MonoBehaviour
     public HeroManager heroManager;
     private GridManager gridManager;
 
-    public HashSet<Vector2Int> visitedPositions;
+    public List<Vector2Int> visitedPositions;
 
     public int health;
 
+    public int weakness = 0;
+    
     public float speed = 1f; // Game speed
 
-    public bool moving = false;
+    public bool moving;
+
+    public bool waiting = false;
     public static Hero New(Vector2Int gridPos, GameObject prefab, GridManager gm, HeroManager hm, HeroType type = HeroType.Normal)
     {
         var heroGm = Instantiate(prefab, gm.TileToWorld(gridPos.x, gridPos.y), Quaternion.identity);
@@ -46,6 +48,7 @@ public class Hero : MonoBehaviour
 
     public void KillSelf(bool force = true)
     {
+        print("Killing Hero");
         if (!force)
         {
             StopMoving();
@@ -68,14 +71,13 @@ public class Hero : MonoBehaviour
         // Check if neighbor is a treasure
         foreach (var item in neighbors)
         {
-            if(item.nodeType == GridNodeType.Treasure)
-            {
-                visitedPositions.Add(item.pos);
-                var n = item.GetComponent<GridNode>();
-                n.SetHighlight(true, Color.yellow);
-                StartCoroutine(StopGotTreasureColor(item)); // Stop highlight after 0.5 seconds
-                return DecisionResult.TreasureFound; 
-            }
+            if (item.nodeType != GridNodeType.Treasure) continue;
+            
+            visitedPositions.Add(item.pos);
+            var n = item.GetComponent<GridNode>();
+            n.SetHighlight(true, Color.yellow);
+            StartCoroutine(StopGotTreasureColor(item)); // Stop highlight after 0.5 seconds
+            return DecisionResult.TreasureFound; 
         }
 
         // Find all treasures on the grid
@@ -97,77 +99,71 @@ public class Hero : MonoBehaviour
             // Move to the next position along the shortest path
             var nextPos = shortestPath[1]; // [0] is current position
             var nextNode = gridManager.GridGetAtPosition(nextPos);
-            if (!visitedPositions.Contains(nextPos) && WillMove(nextNode))
+            if (WillMove(nextNode))
             {
                 visitedPositions.Add(nextPos);
                 return DecisionResult.Move;
-            }
-            else
-            {
-                // If next position is already visited or not movable, stop
-                return DecisionResult.Finished;
-            }
+            }  
+            // If next position is already visited or not movable, stop
+            return DecisionResult.Finished;
         }
-        else
-        {
-            // No path to treasure, pick a random valid neighbor
-            var filtered = neighbors.Where(e => !visitedPositions.Contains(e.pos) && WillMove(e)).ToList();
-            if (filtered.Count == 0) return DecisionResult.Finished; // No moves available
-            var choice = filtered[Random.Range(0, filtered.Count)];
-            visitedPositions.Add(choice.pos);
-            return DecisionResult.Move;
-        }
+        // No path to treasure, pick a random valid neighbor
+        var filtered = neighbors.Where(e => WillMove(e)).ToList();
+        if (filtered.Count == 0) return DecisionResult.Finished; // No moves available
+        var choice = filtered[Random.Range(0, filtered.Count)];
+        visitedPositions.Add(choice.pos);
+        return DecisionResult.Move;
     }
-    public bool TryMoveTo(Vector2Int gpos, out Tween tween)
+    public bool TryMoveTo(Vector2Int newPos, out Tween tween, bool isInternalLoop = false, bool overrideDefault = false)
     {
         tween = null;
-        if (gridManager.GridGetAtPosition(gpos).nodeType == GridNodeType.Wall) return false;
+        if (isInternalLoop && waiting) return false; 
+        
+        var g = gridManager.GridGetAtPosition(newPos);
+        var nt = g.nodeType;
+        if (nt == GridNodeType.Wall || nt == GridNodeType.Treasure || nt == GridNodeType.Void) return false;
 
-        FaceMovingDir(gpos - gridPos);
+        FaceMovingDir(newPos - gridPos);
 
-        tween = gameObject.transform.DOMove(gridManager.TileToWorld(gridPos.x, gridPos.y), 1f);
-        gridPos = gpos;
 
+        tween = gameObject.transform.DOMove(gridManager.TileToWorld(newPos.x, newPos.y), 1f);
+        gridManager.GridGetAtPosition(gridPos).nodeBehavior.OnHeroExit(this);
+        gridPos = newPos;
+        g.nodeBehavior.OnHeroEnter(this);
         return true;
     }
     public void StartMoving()
     {
-        if(moving) return; // Already moving, do nothing
-        visitedPositions = new HashSet<Vector2Int> { gridPos };
+        if(moving) return;
+        visitedPositions = new() { gridPos };
         moving = true;
         StartCoroutine(MovementLoop());
     }
     IEnumerator MovementLoop()
     {
-        while (moving)
+        while (true)
         {
             var neighbors = gridManager.GetNeighbors(gridPos);
             var result = MakeDecision(neighbors);
-            
             if (result == DecisionResult.Finished) 
                 break;
-            
             if(result == DecisionResult.Move || result == DecisionResult.TreasureFound)
             {
-                gridManager.GridGetAtPosition(gridPos).nodeBehavior.OnHeroExit(this);
                 var toMove = visitedPositions.Last();
-                TryMoveTo(toMove, out var tween);
+                TryMoveTo(toMove, out var tween, isInternalLoop: true);
                 if (tween != null)
                 {
                     yield return tween.WaitForCompletion(); 
-                    gridManager.GridGetAtPosition(toMove).nodeBehavior.OnHeroEnter(this);
                 }
             }
-
             if (result == DecisionResult.TreasureFound)
             {
-                this.StopMoving();
+                StopMoving();
                 heroManager.HeroGotTreasure(this);
                 break;
             }
             yield return new WaitForEndOfFrame();
         }
-        heroManager.HeroDoneMoving(this);
     }
     public void StopMoving()
     {
@@ -197,10 +193,14 @@ public class Hero : MonoBehaviour
 
     public void Damage(int amount)
     {
-        health -= amount;
+        health -= amount + weakness;
+        weakness = 0;
         if (health <= 0)
         {
+            heroManager.HeroKilled(this);
             KillSelf();
         }
+
+        Camera.main.DOShakePosition(0.5f, Vector3.one*0.1f);
     }
 }

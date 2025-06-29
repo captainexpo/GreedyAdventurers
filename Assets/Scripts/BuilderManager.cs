@@ -67,22 +67,18 @@ public class BuilderManager : MonoBehaviour
             var node = GetClickedGridNode(Input.mousePosition);
             if (node != null) OnDelete(node);
         }
-        // Scroll through the orientations
-        var scroll = Input.mouseScrollDelta.normalized; // Normalize scroll delta
-        if(scroll.y != 0f)
+        
+        const int count = 4;
+        if (Input.GetKeyDown(KeyCode.Q))
         {
-            int count = 4;
-            if (scroll.y < 0f)
-            {
-                selectedOrientation = (Orientation)(((int)selectedOrientation - 1 + count) % count);
-            }
-            else if (scroll.y > 0f)
-            {
-                selectedOrientation = (Orientation)(((int)selectedOrientation + 1) % count);
-            }
-            gridManager.selectedOrientation = selectedOrientation; // TODO: Should remove gridManager.selectedOrientation
+            selectedOrientation = (Orientation)(((int)selectedOrientation - 1 + count) % count);
+        } 
+        if (Input.GetKeyDown(KeyCode.E))
+        {
+            selectedOrientation = (Orientation)(((int)selectedOrientation + 1) % count);
         }
-    }
+        gridManager.selectedOrientation = selectedOrientation; // TODO: Should remove gridManager.selectedOrientation
+}
     public bool ValidateTreasurePositions()
     {
         var treasures = gridManager.FindAll(GridNodeType.Treasure);
@@ -104,26 +100,26 @@ public class BuilderManager : MonoBehaviour
         }
         return true;
     }
-    public bool CheckValidity()
+    public (bool, string) CheckValidity()
     {
         var allTreasures = gridManager.FindAll(GridNodeType.Treasure);
 
-        if (funds < 0) return false;
-        if (allTreasures.Count == 0) return false; // No treasure placed
-        if (!ValidateTreasurePositions()) return false; // Treasures are too close
+        if (funds < 0) return (false, "no money");
+        if (allTreasures.Count == 0) return (false, "no treasure"); // No treasure placed
+        if (!ValidateTreasurePositions()) return (false, "treasures are too close"); // Treasures are too close
 
         foreach (var startPos in gridManager.startPositions)
         {
             foreach (var treasure in allTreasures)
             {
                 var path = pathfinder.FindPath(startPos, treasure.pos);
-                if (path == null) return false; // No path to treasure found
+                if (path == null) return (false, "no path to treasure"); // No path to treasure found
                 pathfinder.DebugDrawPath(path);
             }
         }
 
 
-        return true;
+        return (true, "");
     }
     public void OnPlace(GridNode clicked)
     {
@@ -197,6 +193,9 @@ public class BuilderManager : MonoBehaviour
                 break;
             case "Treasure":
                 selectedType = GridNodeType.Treasure;
+                break;
+            case "OilTrap":
+                selectedType = GridNodeType.OilTrap;
                 break;
             default:
                 Debug.LogWarning($"Unknown build option: {title}");

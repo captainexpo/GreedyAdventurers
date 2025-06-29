@@ -14,6 +14,9 @@ namespace Grid
         PushTrap,
         PlayerEntrance,
         Treasure,
+        OilTrap,
+        BoulderTrap,
+        Void,
     }
 
     public class GridManager : MonoBehaviour
@@ -158,6 +161,7 @@ namespace Grid
             if(!IsAvailable(gpos)) return false;
             Destroy(grid[gpos.y][gpos.x].gameObject);
             grid[gpos.y][gpos.x] = replacement;
+            if (replacement.nodeType == GridNodeType.Void) reservedPositions.Add(gpos);
             return true;
         }
 
@@ -194,30 +198,26 @@ namespace Grid
 
         public GridNode GridGetAtPosition(Vector2Int pos)
         {
-            if (!IsInBounds(pos)) return null;
-            return grid[pos.y][pos.x];
+            return !IsInBounds(pos) ? null : grid[pos.y][pos.x];
         }
         
-        public Vector2Int GetRandomPosition()
+        public Vector2Int GetRandomPosition(bool forceEmpty = true)
         {
-            List<Vector2Int> availablePositions = new List<Vector2Int>();
-            for (int y = 0; y < gridSize.y; y++)
+            var availablePositions = new List<Vector2Int>();
+            for (var y = 0; y < gridSize.y; y++)
             {
-                for (int x = 0; x < gridSize.x; x++)
+                for (var x = 0; x < gridSize.x; x++)
                 {
                     Vector2Int pos = new Vector2Int(x, y);
-                    if (IsAvailable(pos))
+                    if (IsAvailable(pos) && (!forceEmpty || grid[y][x].nodeType == GridNodeType.Empty))
                     {
                         availablePositions.Add(pos);
                     }
                 }
             }
-            if (availablePositions.Count == 0)
-            {
-                Debug.LogWarning("No available positions found in the grid.");
-                return Vector2Int.zero; 
-            }
-            return availablePositions[Random.Range(0, availablePositions.Count)];
+            if (availablePositions.Count != 0)             return availablePositions[Random.Range(0, availablePositions.Count)];
+            Debug.LogWarning("No available positions found in the grid.");
+            return Vector2Int.zero; 
         }
     }
 }

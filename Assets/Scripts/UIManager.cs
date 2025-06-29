@@ -8,6 +8,7 @@ public class UIManager : MonoBehaviour
 {
     public TextMeshProUGUI validityText;
     public TextMeshProUGUI moneyText;
+    public TextMeshProUGUI roundText;
 
     public TMP_Dropdown buildOptionDropdown;
     private Action<string> builderSelectionCallback;
@@ -20,9 +21,11 @@ public class UIManager : MonoBehaviour
         buildOptionDropdown.onValueChanged.AddListener(BuildOptionSelected);
     }
 
-    public void UpdateValidityText(bool isValid, string reason = "")
+    public void UpdateValidityText((bool, string) x)
     {
+        var (isValid, text) = x;
         validityText.gameObject.SetActive(!isValid);
+        validityText.text = "Invalid Dungeon: " + text;
     }
     public void UpdateMoneyText(int money)
     {
@@ -37,6 +40,10 @@ public class UIManager : MonoBehaviour
         }
     }
 
+    public void UpdateRoundText(int round)
+    {
+        roundText.text = "Round " + round;
+    }
     public void SetBuildOptionDropdownSelectionCallback(Action<string> callback)
     {
         builderSelectionCallback = callback;
