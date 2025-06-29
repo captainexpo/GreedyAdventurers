@@ -340,7 +340,7 @@ MonoBehaviour:
     - Key: 7
       Value: 75
     - Key: 6
-      Value: -300
+      Value: -350
 --- !u!4 &296305562
 Transform:
   m_ObjectHideFlags: 0
@@ -1582,6 +1582,7 @@ MonoBehaviour:
   pathfinder: {fileID: 1454345721}
   gridManager: {fileID: 1975244754}
   gameManager: {fileID: 1610525595}
+  builderManager: {fileID: 296305561}
   isEnabled: 0
   heroPrefab: {fileID: 824187788979254750, guid: e1da8894b0b2a594daa4c81678d8003c, type: 3}
 --- !u!1 &1217492003

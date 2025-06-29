@@ -14,6 +14,7 @@ public class HeroManager : MonoBehaviour
     public Pathfinder pathfinder;
     public GridManager gridManager;
     public GameManager gameManager;
+    public BuilderManager builderManager;
 
     public bool heroIsDead
     {
@@ -59,6 +60,7 @@ public class HeroManager : MonoBehaviour
             gameManager.TryAdvancePhase();
         }
         gameManager.HeroDied(hero);
+        builderManager.UpdateFunds(-75);
     }
     public void Enable()
     {
