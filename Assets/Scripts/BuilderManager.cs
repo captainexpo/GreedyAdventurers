@@ -79,12 +79,18 @@ public class BuilderManager : MonoBehaviour
         }
         gridManager.selectedOrientation = selectedOrientation; // TODO: Should remove gridManager.selectedOrientation
 }
-    public bool ValidateTreasurePositions()
+    public (bool, string) ValidateTreasurePositions()
     {
         var treasures = gridManager.FindAll(GridNodeType.Treasure);
         int numTreasure = treasures.Count;
         for (int i = 0; i < numTreasure; i++)
         {
+            if (treasures[i].pos.x == 0 || treasures[i].pos.x == gridManager.gridSize.x-1 ||
+                treasures[i].pos.y == 0 || treasures[i].pos.y == gridManager.gridSize.y - 1)
+            {
+                Debug.LogWarning($"Treasure {i} at {treasures[i].pos} is on the edge of the grid");
+                return (false, "treasure is on the edge of the grid"); // Treasure is on the edge
+            }
             for (int j = 0; j < numTreasure; j++)
             {
                 // Distance check
@@ -94,11 +100,11 @@ public class BuilderManager : MonoBehaviour
                 if (Vector2Int.Distance(p1, p2) < treasureSeparation)
                 {
                     Debug.LogWarning($"Treasure {i} at {p1} is too close to treasure {j} at {p2}");
-                    return false; // Treasures are too close
+                    return (false, "treasures are too close together"); // Treasures are too close
                 }
             }
         }
-        return true;
+        return (true, "");
     }
     public (bool, string) CheckValidity()
     {
@@ -106,7 +112,8 @@ public class BuilderManager : MonoBehaviour
 
         if (funds < 0) return (false, "no money");
         if (allTreasures.Count == 0) return (false, "no treasure"); // No treasure placed
-        if (!ValidateTreasurePositions()) return (false, "treasures are too close"); // Treasures are too close
+        var (valid, reason) = ValidateTreasurePositions();
+        if (!valid) return (false, reason); // Treasures are too close
 
         foreach (var startPos in gridManager.startPositions)
         {
