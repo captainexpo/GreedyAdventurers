@@ -75,7 +75,7 @@ public class GridNode : MonoBehaviour
     }
     private void OnMouseEnter()
     {
-        SetHighlight(true);
+        if(FindFirstObjectByType<GameManager>().phase == RoundPhase.Building) SetHighlight(true);
     }
 
     private void OnMouseExit()

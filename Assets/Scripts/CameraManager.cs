@@ -15,6 +15,7 @@ public class CameraManager : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        if (!movementEnabled) return;
         if (Input.GetKeyDown(KeyCode.A)) RotateAroundWorldPivot(gameObject, rotateAround, Vector3.up, 45f);
         if (Input.GetKeyDown(KeyCode.D)) RotateAroundWorldPivot(gameObject, rotateAround, Vector3.up, -45f);
     }

@@ -14,6 +14,7 @@ public class UIManager : MonoBehaviour
     private Action<string> builderSelectionCallback;
 
     public List<GameObject> builderExclusiveUI = new();
+    public List<GameObject> mainMenuUI = new();
 
     readonly Dictionary<int, string> buildOptions = new();
     private void Start()
@@ -32,14 +33,22 @@ public class UIManager : MonoBehaviour
         if (moneyText == null) Debug.LogWarning("What the fuck");
         moneyText.text = $"{money}$";
     }
-    public void SetBuilderUI(bool enabled)
+    public void SetBuilderUI(bool visible)
     {
         foreach (var ui in builderExclusiveUI)
         {
-            ui.SetActive(enabled);
+     
+            ui.SetActive(visible);
         }
     }
-
+    public void SetMenuUI(bool visible)
+    {
+        print("Setting menu UI to " + visible);
+        foreach (var ui in mainMenuUI)
+        {
+            ui.SetActive(visible);
+        }
+    }
     public void UpdateRoundText(int round)
     {
         roundText.text = "Round " + round;

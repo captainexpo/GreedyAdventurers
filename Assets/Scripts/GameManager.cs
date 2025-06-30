@@ -1,3 +1,4 @@
+using DG.Tweening;
 using Grid;
 using UnityEngine;
 
@@ -18,17 +19,19 @@ public class GameManager : MonoBehaviour
 
     public int round = 0;
 
-    public RoundPhase phase = RoundPhase.Building;
+    public RoundPhase phase = RoundPhase.Prelude;
 
     void Start()
     {
         Application.targetFrameRate = 60;
         Invoke(nameof(StartPhases), 0.1f);
-        Camera.main.GetComponent<CameraManager>().ResetRotation();
+
+        Camera.main.GetComponent<CameraManager>().movementEnabled = false;
     }
 
     void StartPhases()
     {
+        gridManager.transform.position += new Vector3(0, 20, 0); // Move grid up to hide it during prelude
         NewPhase(phase); // Initialize the game with the starting phase
     }
 
@@ -38,7 +41,14 @@ public class GameManager : MonoBehaviour
         {
             if (phase == RoundPhase.Building && TryAdvancePhase())
                 NewPhase(phase);
+            if (phase == RoundPhase.Prelude)
+            {
+                // Advance to actual game
+                gridManager.transform.DOMoveY(gridManager.gridWorldCenter.y, 2f);
+                TryAdvancePhase();
+            }
         }
+    
     }
 
     void NewPhase(RoundPhase phase)
@@ -50,13 +60,14 @@ public class GameManager : MonoBehaviour
                 
                 builderManager.Enable();
                 heroManager.Disable();
+                // uiManager.SetBuilderUI(true);
                 foreach (var row in gridManager.grid)
-                foreach (var node in row)
-                {
-                    var beh = node.nodeBehavior;
-                    if (beh == null) Debug.LogWarning(node.name + " doesn't have a node behavior set!");
-                    else beh.OnStartBuild();
-                }
+                    foreach (var node in row)
+                    {
+                        var beh = node.nodeBehavior;
+                        if (beh == null) Debug.LogWarning(node.name + " doesn't have a node behavior set!");
+                        else beh.OnStartBuild();
+                    }
 
                 round++;
                 uiManager.UpdateRoundText(round);
@@ -68,6 +79,11 @@ public class GameManager : MonoBehaviour
                     foreach (var node in row)
                         node.nodeBehavior.OnStartHeroMove(heroManager.activeHero);
                 break;
+            case RoundPhase.Prelude:
+                uiManager.SetMenuUI(true);
+                builderManager.Disable();
+                heroManager.Disable();
+                break;
             default:
                 throw new System.ArgumentOutOfRangeException(nameof(phase), phase, null);
         }
@@ -78,13 +94,16 @@ public class GameManager : MonoBehaviour
         switch (phase)
         {
             case RoundPhase.Prelude:
+                uiManager.SetMenuUI(false);
+                var cm = Camera.main.GetComponent<CameraManager>();
+                cm.ResetRotation();
+                cm.movementEnabled = true;
+
                 phase = RoundPhase.Building;
                 break;
             case RoundPhase.Building:
-                if (!builderManager.CheckValidity().Item1) // Check if the dungeon is valid before moving to the next phase
-                {
+                if (!builderManager.CheckValidity().Item1) 
                     return false;
-                }
                 phase = RoundPhase.HeroMoving;
                 break;
             case RoundPhase.HeroMoving:
