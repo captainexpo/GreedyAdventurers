@@ -1,5 +1,6 @@
 using Grid;
 using System.Collections;
+using DG.Tweening;
 using UnityEngine;
 
 public enum HeroType
@@ -90,6 +91,7 @@ public class HeroManager : MonoBehaviour
     public void HeroGotTreasure(Hero hero)
     {
         print("Hero found the treasure!");
+        Camera.main.DOShakePosition(0.5f, Vector3.one*0.1f);
         gameManager.HeroGotTreasure(hero);
     }
 }

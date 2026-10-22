@@ -43,9 +43,7 @@ public class PitTrapNode : MonoBehaviour, GridNodeBase
 
     public void OnHeroExit(Hero hero)
     {
-        // Logic for when a hero exits the spike trap node
         Debug.Log("Hero has exited the Spike Trap Node!");
-        // Here you can add logic to reset effects or states
     }
     public void Cover()
     {

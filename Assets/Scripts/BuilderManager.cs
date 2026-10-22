@@ -78,7 +78,7 @@ public class BuilderManager : MonoBehaviour
             selectedOrientation = (Orientation)(((int)selectedOrientation + 1) % count);
         }
         gridManager.selectedOrientation = selectedOrientation; // TODO: Should remove gridManager.selectedOrientation
-}
+    }
     public (bool, string) ValidateTreasurePositions()
     {
         var treasures = gridManager.FindAll(GridNodeType.Treasure);

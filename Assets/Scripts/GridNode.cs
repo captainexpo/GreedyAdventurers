@@ -1,3 +1,4 @@
+using System.Collections;
 using Grid;
 using UnityEngine;
 using System.Collections.Generic;
@@ -45,6 +46,7 @@ public class GridNode : MonoBehaviour
 
     private Color highlightColor = new(0.7f, 0.7f, 0.7f);
     public List<GameObject> gfx;
+    private bool isRaised = false;
 
     public GridNodeBase nodeBehavior { get; private set; }
 
@@ -63,7 +65,8 @@ public class GridNode : MonoBehaviour
         return this;
     }
 
-    public void SetHighlight(bool x, Color? overrideColor = null)
+    
+    public void SetHighlight(bool x, Color? overrideColor = null, float duration = -1f)
     {
         gfx.ForEach((e)=>
         {
@@ -71,11 +74,28 @@ public class GridNode : MonoBehaviour
             mat.EnableKeyword("_EMISSION");
             mat.SetColor("_EmissionColor", x ? (overrideColor ?? highlightColor) : Color.black);
         });
-        transform.position += new Vector3(0f, x ? 0.05f : -0.05f, 0f);
+        if (x != isRaised)
+        {
+            transform.position += new Vector3(0f, x ? 0.05f : -0.05f, 0f);
+            isRaised = x;
+        }
+        if (duration > 0 && x)
+        {
+            StartCoroutine(StopHighlight(duration));
+        }
     }
+    
+    IEnumerator StopHighlight(float duration)
+    {
+        yield return new WaitForSeconds(duration);
+        SetHighlight(false);
+    }
+    
     private void OnMouseEnter()
     {
-        if(FindFirstObjectByType<GameManager>().phase == RoundPhase.Building) SetHighlight(true);
+        var phase = FindFirstObjectByType<GameManager>().phase;
+        if(phase == RoundPhase.Building) 
+            SetHighlight(true);
     }
 
     private void OnMouseExit()

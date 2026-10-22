@@ -39,9 +39,9 @@ public class GameManager : MonoBehaviour
     {
         if (Input.GetKeyDown(KeyCode.Space))
         {
-            if (phase == RoundPhase.Building && TryAdvancePhase())
-                NewPhase(phase);
-            if (phase == RoundPhase.Prelude)
+            if (phase == RoundPhase.Building)
+                TryAdvancePhase();
+            else if (phase == RoundPhase.Prelude)
             {
                 // Advance to actual game
                 gridManager.transform.DOMoveY(gridManager.gridWorldCenter.y, 2f);
@@ -102,8 +102,12 @@ public class GameManager : MonoBehaviour
                 phase = RoundPhase.Building;
                 break;
             case RoundPhase.Building:
-                if (!builderManager.CheckValidity().Item1) 
+                var (valid, reason) = builderManager.CheckValidity();
+                if (!valid)
+                {
+                    Debug.LogWarning("Can't start hero phase: " + reason);
                     return false;
+                }
                 phase = RoundPhase.HeroMoving;
                 break;
             case RoundPhase.HeroMoving:

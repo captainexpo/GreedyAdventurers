@@ -60,12 +60,6 @@ public class Hero : MonoBehaviour
     {
         return node.nodeType != GridNodeType.Wall;
     }
-    IEnumerator StopGotTreasureColor(GridNode node) 
-    {
-        print("Stopping highlight for treasure node: " + node.pos);
-        yield return new WaitForSeconds(1.0f); 
-        node.GetComponent<GridNode>().SetHighlight(false); 
-    }
     public DecisionResult MakeDecision(List<GridNode> neighbors)
     {
         // Check if neighbor is a treasure
@@ -75,8 +69,7 @@ public class Hero : MonoBehaviour
             
             visitedPositions.Add(item.pos);
             var n = item.GetComponent<GridNode>();
-            n.SetHighlight(true, Color.yellow);
-            StartCoroutine(StopGotTreasureColor(item)); // Stop highlight after 0.5 seconds
+            n.SetHighlight(true, Color.yellow, 1f);
             return DecisionResult.TreasureFound; 
         }
 
